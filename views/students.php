@@ -173,7 +173,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
     </div>
 
     <!-- Edit Profile Modal -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1">
+    <!-- <div class="modal fade" id="editProfileModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -233,7 +233,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
     </div>
     </div>
 

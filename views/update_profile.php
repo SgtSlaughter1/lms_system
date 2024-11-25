@@ -12,32 +12,13 @@ $studentController = new StudentController($connect);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = $_SESSION['student_id'];
-
-    // Handle profile update
-    $updateData = [
-        'name' => $_POST['name'],
-        'email' => $_POST['email'],
-        'phone' => $_POST['phone']
-    ];
-
-    $studentController->updateProfile($student_id, $updateData);
-
-    // Handle password update if new password is provided
-    if (!empty($_POST['new_password'])) {
-        $passwordData = [
-            'new_password' => $_POST['new_password'],
-            'confirm_password' => $_POST['confirm_password']
-        ];
-
-        $result = $studentController->updatePassword($student_id, $passwordData);
-
-        if ($result['status'] === 'success') {
-            $_SESSION['success_message'] = "Profile and password updated successfully!";
-        } else {
-            $_SESSION['error_message'] = $result['message'];
-        }
+    
+    $result = $studentController->handleProfileUpdate($student_id, $_POST);
+    
+    if ($result['status'] === 'success') {
+        $_SESSION['success_message'] = $result['message'];
     } else {
-        $_SESSION['success_message'] = "Profile updated successfully!";
+        $_SESSION['error_message'] = $result['message'];
     }
 
     // Redirect back to profile page
