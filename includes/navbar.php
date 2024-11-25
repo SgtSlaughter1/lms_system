@@ -54,11 +54,11 @@
                             <i class="bi bi-person me-2"></i>My Profile
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                             <i class="bi bi-pencil-square me-2"></i>Edit Profile
                         </a>
-                    </li>
+                    </li> -->
 
                     <li>
                         <hr class="dropdown-divider">
