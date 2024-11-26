@@ -6,7 +6,6 @@ class StudentController {
     private $db;
     
     public function __construct($db) {
-        $this->db = $db;
         $this->studentModel = new Student($db);
     }
     
@@ -15,6 +14,9 @@ class StudentController {
     }
     
     public function updateProfile($student_id, $data) {
+        if(empty($data['name']) || empty($data['email'])) {
+            return ['status' => 'error', 'message' => 'Name and email are required'];
+        }
         return $this->studentModel->updateProfile($student_id, $data);
     }
 
@@ -26,54 +28,41 @@ class StudentController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $student_id = $_SESSION['student_id'];
-            
-            // Handle profile update
             $updateData = [
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
                 'phone' => $_POST['phone']
             ];
             
-            $this->updateProfile($student_id, $updateData);
-
-            // Handle password update if new password is provided
+            $result = $this->updateProfile($student_id, $updateData);
+            
+            // Handle password update if provided
             if (!empty($_POST['new_password'])) {
-                $passwordData = [
-                    'new_password' => $_POST['new_password'],
-                    'confirm_password' => $_POST['confirm_password']
-                ];
+                if ($_POST['new_password'] !== $_POST['confirm_password']) {
+                    $_SESSION['error_message'] = "Passwords do not match";
+                    header("Location: profile.php");
+                    exit();
+                }
                 
-                $result = $this->updatePassword($student_id, $passwordData);
-                
-                if ($result['status'] === 'success') {
+                $passwordResult = $this->updatePassword($student_id, $_POST['new_password']);
+                if ($passwordResult['status'] === 'success') {
                     $_SESSION['success_message'] = "Profile and password updated successfully!";
                 } else {
-                    $_SESSION['error_message'] = $result['message'];
+                    $_SESSION['error_message'] = $passwordResult['message'];
                 }
             } else {
-                $_SESSION['success_message'] = "Profile updated successfully!";
+                $_SESSION['success_message'] = $result['message'];
             }
             
-            // Redirect back to profile page
             header("Location: profile.php");
             exit();
         }
     }
 
-    public function updatePassword($student_id, $data) {
-        // Validate passwords
-        if (empty($data['new_password'])) {
-            return ['status' => 'error', 'message' => 'New password cannot be empty'];
+    public function updatePassword($student_id, $password) {
+        if (empty($password)) {
+            return ['status' => 'error', 'message' => 'Password cannot be empty'];
         }
-
-        if ($data['new_password'] !== $data['confirm_password']) {
-            return ['status' => 'error', 'message' => 'Passwords do not match'];
-        }
-
-        // Store password directly (temporarily)
-        if ($this->studentModel->updatePassword($student_id, $data['new_password'])) {
-            return ['status' => 'success', 'message' => 'Password updated successfully!'];
-        }
-        return ['status' => 'error', 'message' => 'Error updating password'];
+        return $this->studentModel->updatePassword($student_id, $password);
     }
 }

@@ -106,7 +106,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                             </div>
                             <div class="card-body">
                                 <div class="d-grid gap-2">
-                                    <a href="#" class="btn btn-primary">
+                                    <a href="../views/books.php" class="btn btn-primary">
                                         <i class="bi bi-search"></i> Search Books
                                     </a>
                                     <a href="#" class="btn btn-info">
@@ -172,68 +172,6 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
-    <!-- <div class="modal fade" id="editProfileModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-person-circle"></i>
-                        Edit Profile
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form method="POST">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="student_id" class="form-label">
-                                <i class="bi bi-person-badge"></i>
-                                Student ID
-                            </label>
-                            <input type="text" class="form-control" id="student_id"
-                                value="<?php echo htmlspecialchars($student['id']); ?>" readonly>
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle"></i>
-                                Student ID cannot be changed
-                            </small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">
-                                <i class="bi bi-person"></i>
-                                Full Name
-                            </label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="<?php echo htmlspecialchars($student['name']); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="bi bi-envelope"></i>
-                                Email Address
-                            </label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="<?php echo htmlspecialchars($student['email']); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">
-                                <i class="bi bi-telephone"></i>
-                                Phone Number
-                            </label>
-                            <input type="tel" class="form-control" id="phone" name="phone"
-                                value="<?php echo htmlspecialchars($student['phone'] ?? ''); ?>">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle"></i> Close
-                        </button>
-                        <button type="submit" name="update_profile" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> -->
     </div>
     </div>
 

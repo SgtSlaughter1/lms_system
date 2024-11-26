@@ -20,13 +20,38 @@ class Student {
         $sql = "UPDATE students SET name = ?, email = ?, phone = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("sssi", $data['name'], $data['email'], $data['phone'], $id);
-        return $stmt->execute();
+        
+        if($stmt->execute()) {
+            return ['status' => 'success', 'message' => 'Profile updated successfully'];
+        }
+        return ['status' => 'error', 'message' => 'Failed to update profile'];
     }
     
     public function updatePassword($id, $password) {
         $sql = "UPDATE students SET password = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("si", $password, $id);
-        return $stmt->execute();
+        
+        if($stmt->execute()) {
+            return ['status' => 'success', 'message' => 'Password updated successfully'];
+        }
+        return ['status' => 'error', 'message' => 'Failed to update password'];
+    }
+
+    public function validateProfileData($data) {
+        if(empty($data['name']) || empty($data['email'])) {
+            return ['status' => 'error', 'message' => 'Name and email are required'];
+        }
+        return ['status' => 'success'];
+    }
+
+    public function validatePassword($password, $confirmPassword) {
+        if(empty($password)) {
+            return ['status' => 'error', 'message' => 'Password cannot be empty'];
+        }
+        if($password !== $confirmPassword) {
+            return ['status' => 'error', 'message' => 'Passwords do not match'];
+        }
+        return ['status' => 'success'];
     }
 }
