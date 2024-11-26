@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <!-- Website Logo/Name -->
         <a class="navbar-brand d-flex align-items-center" href="/lms_system/index.php">
             <div class="d-flex align-items-center">
                 <i class="bi bi-book-half text-primary fs-2 me-2"></i>
@@ -54,11 +53,6 @@
                             <i class="bi bi-person me-2"></i>My Profile
                         </a>
                     </li>
-                    <!-- <li>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="bi bi-pencil-square me-2"></i>Edit Profile
-                        </a>
-                    </li> -->
 
                     <li>
                         <hr class="dropdown-divider">

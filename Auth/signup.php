@@ -88,12 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -115,8 +117,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="name" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>" 
-                                           id="name" name="name" value="<?php echo htmlspecialchars($name ?? ''); ?>" required>
+                                    <input type="text" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>"
+                                        id="name" name="name" value="<?php echo htmlspecialchars($name ?? ''); ?>" required>
                                     <?php if (isset($errors['name'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['name']; ?></div>
                                     <?php endif; ?>
@@ -124,8 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class="col-md-6 mb-3">
                                     <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control <?php echo isset($errors['username']) ? 'is-invalid' : ''; ?>" 
-                                           id="username" name="username" value="<?php echo htmlspecialchars($username ?? ''); ?>" required>
+                                    <input type="text" class="form-control <?php echo isset($errors['username']) ? 'is-invalid' : ''; ?>"
+                                        id="username" name="username" value="<?php echo htmlspecialchars($username ?? ''); ?>" required>
                                     <?php if (isset($errors['username'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['username']; ?></div>
                                     <?php endif; ?>
@@ -135,8 +137,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control <?php echo isset($errors['email']) ? 'is-invalid' : ''; ?>" 
-                                           id="email" name="email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+                                    <input type="email" class="form-control <?php echo isset($errors['email']) ? 'is-invalid' : ''; ?>"
+                                        id="email" name="email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
                                     <?php if (isset($errors['email'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['email']; ?></div>
                                     <?php endif; ?>
@@ -144,8 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Phone Number</label>
-                                    <input type="tel" class="form-control <?php echo isset($errors['phone']) ? 'is-invalid' : ''; ?>" 
-                                           id="phone" name="phone" value="<?php echo htmlspecialchars($phone ?? ''); ?>" required>
+                                    <input type="tel" class="form-control <?php echo isset($errors['phone']) ? 'is-invalid' : ''; ?>"
+                                        id="phone" name="phone" value="<?php echo htmlspecialchars($phone ?? ''); ?>" required>
                                     <?php if (isset($errors['phone'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['phone']; ?></div>
                                     <?php endif; ?>
@@ -155,8 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="age" class="form-label">Age</label>
-                                    <input type="number" class="form-control <?php echo isset($errors['age']) ? 'is-invalid' : ''; ?>" 
-                                           id="age" name="age" value="<?php echo htmlspecialchars($age ?? ''); ?>" required>
+                                    <input type="number" class="form-control <?php echo isset($errors['age']) ? 'is-invalid' : ''; ?>"
+                                        id="age" name="age" value="<?php echo htmlspecialchars($age ?? ''); ?>" required>
                                     <?php if (isset($errors['age'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['age']; ?></div>
                                     <?php endif; ?>
@@ -164,8 +166,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class="col-md-6 mb-3">
                                     <label for="sex" class="form-label">Gender</label>
-                                    <select class="form-select <?php echo isset($errors['sex']) ? 'is-invalid' : ''; ?>" 
-                                            id="sex" name="sex" required>
+                                    <select class="form-select <?php echo isset($errors['sex']) ? 'is-invalid' : ''; ?>"
+                                        id="sex" name="sex" required>
                                         <option value="" selected disabled>Choose...</option>
                                         <option value="M" <?php echo ($sex ?? '') === 'M' ? 'selected' : ''; ?>>Male</option>
                                         <option value="F" <?php echo ($sex ?? '') === 'F' ? 'selected' : ''; ?>>Female</option>
@@ -180,8 +182,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control <?php echo isset($errors['password']) ? 'is-invalid' : ''; ?>" 
-                                           id="password" name="password" required>
+                                    <input type="password" class="form-control <?php echo isset($errors['password']) ? 'is-invalid' : ''; ?>"
+                                        id="password" name="password" required>
                                     <?php if (isset($errors['password'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['password']; ?></div>
                                     <?php endif; ?>
@@ -189,8 +191,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class="col-md-6 mb-3">
                                     <label for="cpassword" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control <?php echo isset($errors['cpassword']) ? 'is-invalid' : ''; ?>" 
-                                           id="cpassword" name="cpassword" required>
+                                    <input type="password" class="form-control <?php echo isset($errors['cpassword']) ? 'is-invalid' : ''; ?>"
+                                        id="cpassword" name="cpassword" required>
                                     <?php if (isset($errors['cpassword'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['cpassword']; ?></div>
                                     <?php endif; ?>
@@ -213,4 +215,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

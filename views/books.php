@@ -15,16 +15,17 @@ $books = $bookController->searchBooks($searchTerm);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Books</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    
+
     <style>
         .table-container {
             background-color: white;
@@ -32,6 +33,7 @@ $books = $bookController->searchBooks($searchTerm);
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-4">
         <h2 class="mb-4">Library Books</h2>
@@ -41,11 +43,11 @@ $books = $bookController->searchBooks($searchTerm);
             <div class="col-md-6">
                 <form action="" method="GET">
                     <div class="input-group">
-                        <input type="text" 
-                               name="search" 
-                               class="form-control" 
-                               placeholder="Search books..."
-                               value="<?= htmlspecialchars($searchTerm) ?>">
+                        <input type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search books..."
+                            value="<?= htmlspecialchars($searchTerm) ?>">
                         <button type="submit" class="btn btn-primary">Search</button>
                         <?php if (!empty($searchTerm)): ?>
                             <a href="books.php" class="btn btn-secondary">Clear</a>
@@ -90,9 +92,9 @@ $books = $bookController->searchBooks($searchTerm);
                                     <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
                                         <!-- Admin Actions -->
                                         <a href="/books/edit/<?= $book['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                        <a href="/books/delete/<?= $book['id'] ?>" 
-                                           class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                                        <a href="/books/delete/<?= $book['id'] ?>"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
                                     <?php else: ?>
                                         <!-- Student Actions -->
                                         <?php if ($book['available_copies'] > 0): ?>
@@ -122,4 +124,5 @@ $books = $bookController->searchBooks($searchTerm);
 
     <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
 </body>
+
 </html>
