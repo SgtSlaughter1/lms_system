@@ -13,17 +13,15 @@ $studentController = new StudentController($connect);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = $_SESSION['student_id'];
     
-    $result = $studentController->handleProfileUpdate($student_id, $_POST);
+    $studentController->handleProfileUpdate();
     
-    if ($result['status'] === 'success') {
-        $_SESSION['success_message'] = $result['message'];
+    if (isset($_SESSION['success_message'])) {
+        header("Location: profile.php");
+        exit();
     } else {
-        $_SESSION['error_message'] = $result['message'];
+        header("Location: profile.php");
+        exit();
     }
-
-    // Redirect back to profile page
-    header("Location: profile.php");
-    exit();
 }
 
 // If not POST request, redirect to profile

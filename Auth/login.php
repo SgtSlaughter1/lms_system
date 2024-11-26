@@ -37,20 +37,22 @@ if (isset($_POST['log'])) {
 
     // Validate password and handle login
     if ($row) {
-        $_SESSION['username'] = $row['username'];
-        $_SESSION['password'] = $row['password'];
-        $_SESSION['role'] = $role;
-        $_SESSION['student_id'] = $row['id'];
+        // Direct password comparison
+        if ($password === $row['password']) {
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['password'] = $row['password'];
+            $_SESSION['role'] = $role;
+            $_SESSION['student_id'] = $row['id'];
 
-        // Redirect based on role
-        if ($role === "admin") {
-            header("location: /lms_system/views/admin.php");
-        } elseif ($role === "student") {
-            header("location: /lms_system/views/students.php");
+            if ($role === "admin") {
+                header("location: /lms_system/views/admin.php");
+            } elseif ($role === "student") {
+                header("location: /lms_system/views/students.php");
+            }
+            exit;
+        } else {
+            $error_message = "Incorrect username or password.";
         }
-        exit;
-    } else {
-        $error_message = "Incorrect username or password.";
     }
 }
 ?>
