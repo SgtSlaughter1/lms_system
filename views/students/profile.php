@@ -36,7 +36,6 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <?php include dirname(__DIR__) . '/includes/navbar.php'; ?>
 
     <div class="container mt-4">
         <?php if (isset($_SESSION['success_message'])): ?>
@@ -196,5 +195,6 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
+    <?php include dirname(__DIR__) . '/../includes/footer.php'; ?>
+
 </body>

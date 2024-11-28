@@ -1,77 +1,90 @@
 <?php
 
-class Book {
+class Book
+{
     // Properties
     private $id;
     private $title;
     private $author;
     private $isbn;
     private $available_copies;
-    private $conn;
+    private $connect;
 
     // Constructor
-    public function __construct($connection) {
-        $this->conn = $connection;
+    public function __construct($connection)
+    {
+        $this->connect = $connection;
     }
 
     // Getters and Setters
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    public function getAuthor() {
+    public function getAuthor()
+    {
         return $this->author;
     }
 
-    public function setAuthor($author) {
+    public function setAuthor($author)
+    {
         $this->author = $author;
     }
 
-    public function getIsbn() {
+    public function getIsbn()
+    {
         return $this->isbn;
     }
 
-    public function setIsbn($isbn) {
+    public function setIsbn($isbn)
+    {
         $this->isbn = $isbn;
     }
 
-    public function getAvailableCopies() {
+    public function getAvailableCopies()
+    {
         return $this->available_copies;
     }
 
-    public function setAvailableCopies($copies) {
+    public function setAvailableCopies($copies)
+    {
         $this->available_copies = $copies;
     }
 
     // Database Operations
-    public function getAllBooks() {
+    public function getAllBooks()
+    {
         $sql = "SELECT * FROM books";
-        $result = $this->conn->query($sql);
-        
+        $result = $this->connect->query($sql);
+
         $books = array();
         while ($row = $result->fetch_assoc()) {
             $books[] = $row;
         }
-        
+
         return $books;
     }
 
-    public function getBookById($id) {
+    public function getBookById($id)
+    {
         try {
             $id = (int)$id;
             $query = "SELECT * FROM books WHERE id = $id";
-            $result = mysqli_query($this->conn, $query);
+            $result = mysqli_query($this->connect, $query);
 
             if (!$result) {
-                throw new Exception("Error fetching book: " . mysqli_error($this->conn));
+                throw new Exception("Error fetching book: " . mysqli_error($this->connect));
             }
 
             return mysqli_fetch_assoc($result);
@@ -81,11 +94,12 @@ class Book {
         }
     }
 
-    public function save($data) {
+    public function save($data)
+    {
         try {
-            $title = mysqli_real_escape_string($this->conn, $data['title']);
-            $author = mysqli_real_escape_string($this->conn, $data['author']);
-            $isbn = mysqli_real_escape_string($this->conn, $data['isbn']);
+            $title = mysqli_real_escape_string($this->connect, $data['title']);
+            $author = mysqli_real_escape_string($this->connect, $data['author']);
+            $isbn = mysqli_real_escape_string($this->connect, $data['isbn']);
             $copies = (int)$data['available_copies'];
 
             if ($this->id) {
@@ -102,40 +116,39 @@ class Book {
                          VALUES ('$title', '$author', '$isbn', $copies)";
             }
 
-            return mysqli_query($this->conn, $query);
+            return mysqli_query($this->connect, $query);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return false;
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         try {
             $id = (int)$id;
             $query = "DELETE FROM books WHERE id = $id";
-            return mysqli_query($this->conn, $query);
+            return mysqli_query($this->connect, $query);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return false;
         }
     }
 
-    public function searchBooks($searchTerm) {
+    public function searchBooks($searchTerm)
+    {
         $searchPattern = "%{$searchTerm}%";
         $sql = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ?";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("sss", $searchPattern, $searchPattern, $searchPattern);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $books = array();
         while ($row = $result->fetch_assoc()) {
             $books[] = $row;
         }
-        
+
         return $books;
     }
 }
-
-
-

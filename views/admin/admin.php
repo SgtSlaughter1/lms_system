@@ -12,7 +12,6 @@ include dirname(__DIR__) . "/../config/database.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/lms_system/assets/css/style.css">
 </head>
 
 <body>
@@ -140,7 +139,7 @@ include dirname(__DIR__) . "/../config/database.php";
                             </div>
                             <div class="card-body">
                                 <a href="adminbooks.php" class="btn btn-primary mr-2">Manage Books</a>
-                                <a href="students.php" class="btn btn-success mr-2">Manage Students</a>
+                                <a href="view_students.php" class="btn btn-success mr-2">Manage Students</a>
                                 <a href="transactions.php" class="btn btn-info mr-2">Book Transactions</a>
                                 <a href="reports.php" class="btn btn-warning">Generate Reports</a>
                             </div>

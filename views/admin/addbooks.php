@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>Edit Book</h2>
+    <h1>Add Books</h1>
 </body>
 </html>
