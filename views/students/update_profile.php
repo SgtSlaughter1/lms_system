@@ -1,7 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__) . "/config/database.php";
-require_once dirname(__DIR__) . "/controllers/StudentController.php";
+require_once dirname(__DIR__) . '/../config/database.php';
+require_once dirname(__DIR__) . '/../controllers/StudentController.php';
+include dirname(__DIR__) . '/../includes/navbar.php';  // Fixed path
 
 if (!isset($_SESSION['student_id'])) {
     header("location: /lms_system/Auth/login.php");

@@ -42,12 +42,11 @@ if (isset($_POST['log'])) {
             $_SESSION['username'] = $row['username'];
             $_SESSION['password'] = $row['password'];
             $_SESSION['role'] = $role;
-            $_SESSION['student_id'] = $row['id'];
-
+            
             if ($role === "admin") {
-                header("location: /lms_system/views/admin.php");
-            } elseif ($role === "student") {
-                header("location: /lms_system/views/students.php");
+                header("location: /lms_system/views/admin/admin.php");
+            } else {
+                header("location: /lms_system/views/students/students.php");
             }
             exit;
         } else {

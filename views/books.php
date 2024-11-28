@@ -1,7 +1,23 @@
 <?php
+session_start();
+
 require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/controllers/BookController.php';
 include dirname(__DIR__) . '/includes/navbar.php';
+
+
+// Check if user is logged in
+if (!isset($_SESSION['user_type'])) {
+    header("location: /lms_system/Auth/login.php");
+    exit();
+}
+
+// Debugging: Check if user is admin
+// if (isset($_SESSION['user_type'])) {
+//     echo "<!-- User type: " . htmlspecialchars($_SESSION['user_type']) . " -->";
+// } else {
+//     echo "<!-- User type not set -->";
+// }
 
 // Create controller instance
 $bookController = new BookController($connect);
@@ -84,8 +100,8 @@ $books = $bookController->searchBooks($searchTerm);
                                 <td><?= htmlspecialchars($book['author']) ?></td>
                                 <td><?= htmlspecialchars($book['isbn']) ?></td>
                                 <td>
-                                    <span class="<?= $book['available_copies'] > 0 ? 'text-success' : 'text-danger' ?>">
-                                        <?= htmlspecialchars($book['available_copies']) ?> copies
+                                    <span class=" align-center <?= $book['available_copies'] > 0 ? 'text-success' : 'text-danger' ?>">
+                                        <?= htmlspecialchars($book['available_copies']) ?>
                                     </span>
                                 </td>
                                 <td>
