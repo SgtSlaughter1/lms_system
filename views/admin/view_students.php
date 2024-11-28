@@ -12,6 +12,14 @@ include dirname(__DIR__) . "/../config/database.php";
 // Fetch all students from the database
 $query = "SELECT * FROM students ORDER BY name ASC";
 $result = mysqli_query($connect, $query);
+
+// Store the rows in an array
+$students = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $students[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,39 +44,36 @@ $result = mysqli_query($connect, $query);
 
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Username</th>
-                                <th>Sex</th>
-                                <th>Age</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Books Borrowed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while($row = mysqli_fetch_assoc($result)) { ?>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Books Borrowed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($students)): ?>
+                            <?php foreach ($students as $row): ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($row['id']); ?></td>
                                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                                     <td><?php echo htmlspecialchars($row['UserName']); ?></td>
-                                    <td><?php 
-                                        $genders = ['M' => 'Male', 'F' => 'Female', 'O' => 'Other'];
-                                        echo htmlspecialchars($genders[$row['sex']] ?? $row['sex']); 
-                                    ?></td>
-                                    <td><?php echo htmlspecialchars($row['age']); ?></td>
                                     <td><?php echo htmlspecialchars($row['email']); ?></td>
                                     <td><?php echo htmlspecialchars($row['phone']); ?></td>
                                     <td><?php echo htmlspecialchars($row['total_books_borrowed']); ?></td>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center">No students found</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
