@@ -18,6 +18,7 @@ $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Get books (either all or searched)
 $books = $bookController->searchBooks($searchTerm);
+
 ?>
 
 <!DOCTYPE html>

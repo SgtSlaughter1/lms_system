@@ -7,50 +7,53 @@ if (isset($_POST['log'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Initialize variables
-    $role = null;
-    $row = null;
+    // Check in students table first
+    $sql = "SELECT * FROM students WHERE username = ?";
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Check password
+        if ($password === $row['password']) {
+            // Set student session variables
+            $_SESSION['username'] = $row['UserName'];
+            $_SESSION['role'] = 'student';
+            $_SESSION['student_id'] = $row['id'];
+            $_SESSION['student'] = array(
+                'name' => $row['name'],
+                'email' => $row['email']
+            );
 
-    // Check in the admins table
+            
+            // Redirect to student dashboard
+            header("location: /lms_system/views/students/students.php");
+            exit();
+        }
+    }
+
+    // Check in admins table if not found in students
     $sql = "SELECT * FROM admins WHERE username = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
+    
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $role = "admin";
-    }
-
-    // If not found in admins, check in the students table
-    if (!$row) {
-        $sql = "SELECT * FROM students WHERE username = ?";
-        $stmt = $connect->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $role = "student";
-        }
-    }
-
-    // Validate password and handle login
-    if ($row) {
-        // Direct password comparison
+        // Check password
         if ($password === $row['password']) {
+            // Set admin session variables
             $_SESSION['username'] = $row['username'];
-            $_SESSION['password'] = $row['password'];
-            $_SESSION['role'] = $role;
+            $_SESSION['role'] = 'admin';
+            $_SESSION['admin_name'] = $row['name'];
+            $_SESSION['admin_email'] = $row['email'];
             
-            if ($role === "admin") {
-                header("location: /lms_system/views/admin/admin.php");
-            } else {
-                header("location: /lms_system/views/students/students.php");
-            }
-            exit;
-        } else {
-            $error_message = "Incorrect username or password.";
+            // Correct path to admin dashboard
+            header("location: /lms_system/views/admin/admin.php");
+            exit();
         }
     }
 }
@@ -64,9 +67,29 @@ if (isset($_POST['log'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
@@ -76,7 +99,7 @@ if (isset($_POST['log'])) {
                     <?= htmlspecialchars($error_message); ?>
                 </div>
             <?php endif; ?>
-            <form action="" method="POST">
+            <form action="" method="POST" id="loginForm">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" name="username" id="username"
@@ -98,6 +121,11 @@ if (isset($_POST['log'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        });
+    </script>
 </body>
 
 </html>

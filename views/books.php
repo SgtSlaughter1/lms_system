@@ -5,10 +5,10 @@ require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/controllers/BookController.php';
 include dirname(__DIR__) . '/includes/navbar.php';
 
-if (!isset($_SESSION['user_type'])) {
-    header("location: /lms_system/Auth/login.php");
-    exit();
-}
+// if (!isset($_SESSION['user_type'])) {
+//     header("location: /lms_system/Auth/login.php");
+//     exit();
+// }
 
 $bookController = new BookController($connect);
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';

@@ -1,130 +1,98 @@
 <?php
 session_start();
-require_once dirname(__DIR__) . '/../config/database.php';
-require_once dirname(__DIR__) . '/../controllers/StudentController.php';
-include dirname(__DIR__) . '/../includes/navbar.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['student_id'])) {
-    header("location: /lms_system/Auth/login.php");
+// Check if user is logged in as a student
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student' || !isset($_SESSION['student_id'])) {
+    header("Location: /lms_system/Auth/login.php");
     exit();
 }
 
-$studentController = new StudentController($connect);
-$student = $studentController->getStudentProfile($_SESSION['student_id']);
+// Include database connection
+include_once dirname(__DIR__) . "/../config/database.php";
+
+// Get the logged-in student's details using student_id
+$student_id = $_SESSION['student_id'];
+$stmt = $connect->prepare("SELECT * FROM students WHERE id = ?");
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$student = $result->fetch_assoc();
+
+if (!$student) {
+    header("Location: /lms_system/Auth/login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile</title>
+    <title>My Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <style>
-        .lead {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .profile-card {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-    </style>
 </head>
+<body>
+    <?php include_once dirname(__DIR__) . "/../includes/navbar.php"; ?>
 
-<body class="d-flex flex-column min-vh-100">
-
-    <div class="container mt-4">
-        <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?php
-                echo $_SESSION['success_message'];
-                unset($_SESSION['success_message']);
-                ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php
-                echo $_SESSION['error_message'];
-                unset($_SESSION['error_message']);
-                ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <?php endif; ?>
-
-        <div class="row">
-            <div class="col-md-8 mx-auto">
-                <div class="card profile-card">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="bi bi-person-circle"></i> Student Profile
-                        </h5>
+                        <h3 class="mb-0">My Profile</h3>
                     </div>
                     <div class="card-body">
                         <div class="text-center mb-4">
-                            <i class="bi bi-person-circle text-primary" style="font-size: 5rem;"></i>
+                            <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row g-3">
                             <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-person-badge"></i> Student ID
-                                </h6>
-                                <p class="lead"><?php echo htmlspecialchars($student['id']); ?></p>
+                                <label class="form-label fw-bold">Full Name</label>
+                                <p class="border-bottom pb-2"><?php echo htmlspecialchars($student['name']); ?></p>
                             </div>
-                            <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-person"></i> Full Name
-                                </h6>
-                                <p class="lead"><?php echo htmlspecialchars($student['name']); ?></p>
-                            </div>
-                        </div>
 
-                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-envelope"></i> Email Address
-                                </h6>
-                                <p class="lead"><?php echo htmlspecialchars($student['email']); ?></p>
+                                <label class="form-label fw-bold">Username</label>
+                                <p class="border-bottom pb-2"><?php echo htmlspecialchars($student['UserName']); ?></p>
                             </div>
-                            <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-telephone"></i> Phone Number
-                                </h6>
-                                <p class="lead"><?php echo htmlspecialchars($student['phone'] ?? 'Not provided'); ?></p>
-                            </div>
-                        </div>
 
-                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-calendar-check"></i> Member Since
-                                </h6>
-                                <p class="lead">
-                                    <?php echo date('F j, Y', strtotime($student['created_at'])); ?>
+                                <label class="form-label fw-bold">Email</label>
+                                <p class="border-bottom pb-2"><?php echo htmlspecialchars($student['email']); ?></p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <p class="border-bottom pb-2"><?php echo htmlspecialchars($student['phone']); ?></p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Age</label>
+                                <p class="border-bottom pb-2"><?php echo htmlspecialchars($student['age']); ?></p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Gender</label>
+                                <p class="border-bottom pb-2">
+                                    <?php 
+                                        $genders = [
+                                            'M' => 'Male',
+                                            'F' => 'Female',
+                                            'O' => 'Other'
+                                        ];
+                                        echo htmlspecialchars($genders[$student['sex']] ?? $student['sex']); 
+                                    ?>
                                 </p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="text-muted mb-1">
-                                    <i class="bi bi-book"></i> Total Books Borrowed
-                                </h6>
-                                <p class="lead">0</p>
                             </div>
                         </div>
 
                         <div class="text-center mt-4">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                                <i class="bi bi-pencil-square"></i> Edit Profile
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="bi bi-pencil-square me-2"></i>Edit Profile
                             </button>
-                            <a href="students.php" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Back to Dashboard
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -137,57 +105,47 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-person-circle"></i>
-                        Edit Profile
-                    </h5>
+                    <h5 class="modal-title">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="update_profile.php">
+                <form action="update_profile.php" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="form-label">
-                                <i class="bi bi-person"></i> Full Name
-                            </label>
-                            <input type="text" class="form-control" id="name" name="name"
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" name="name" 
                                 value="<?php echo htmlspecialchars($student['name']); ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="bi bi-envelope"></i> Email Address
-                            </label>
-                            <input type="email" class="form-control" id="email" name="email"
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" 
                                 value="<?php echo htmlspecialchars($student['email']); ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">
-                                <i class="bi bi-telephone"></i> Phone Number
-                            </label>
-                            <input type="tel" class="form-control" id="phone" name="phone"
-                                value="<?php echo htmlspecialchars($student['phone'] ?? ''); ?>">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone" 
+                                value="<?php echo htmlspecialchars($student['phone']); ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="new_password" class="form-label">
-                                <i class="bi bi-key"></i> New Password
-                            </label>
-                            <input type="password" class="form-control" id="new_password" name="new_password"
-                                placeholder="Leave blank to keep current password">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" name="age" 
+                                value="<?php echo htmlspecialchars($student['age']); ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="confirm_password" class="form-label">
-                                <i class="bi bi-key-fill"></i> Confirm New Password
-                            </label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
-                                placeholder="Confirm new password">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" name="sex" required>
+                                <option value="M" <?php echo $student['sex'] === 'M' ? 'selected' : ''; ?>>Male</option>
+                                <option value="F" <?php echo $student['sex'] === 'F' ? 'selected' : ''; ?>>Female</option>
+                                <option value="O" <?php echo $student['sex'] === 'O' ? 'selected' : ''; ?>>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">New Password (leave blank to keep current)</label>
+                            <input type="password" class="form-control" name="new_password">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle"></i> Close
-                        </button>
-                        <button type="submit" name="update_profile" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Save Changes
-                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -195,6 +153,5 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include dirname(__DIR__) . '/../includes/footer.php'; ?>
-
+    <?php include_once dirname(__DIR__) . "/../includes/footer.php"; ?>
 </body>
