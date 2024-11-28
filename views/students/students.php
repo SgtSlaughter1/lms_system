@@ -4,9 +4,9 @@ require_once dirname(__DIR__) . '/../config/database.php';
 require_once dirname(__DIR__) . '/../controllers/StudentController.php';
 include dirname(__DIR__) . '/../includes/navbar.php';
 
-// Check if user is student
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'student') {
-    header("location: /lms_system/Auth/login.php");
+// Check if user is logged in as student
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
+    header("Location: /lms_system/Auth/login.php");
     exit();
 }
 $studentController = new StudentController($connect);
