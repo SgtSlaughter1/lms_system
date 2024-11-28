@@ -98,6 +98,11 @@ if ($user_type == 'admin') {
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
+                        <li>
+                            <a class="dropdown-item" href="/lms_system/views/students/students.php">
+                                <i class="bi bi-book me-2"></i>Dashboard
+                            </a>
+                        </li>
                             <a class="dropdown-item" href="/lms_system/views/students/profile.php">
                                 <i class="bi bi-person me-2"></i>My Profile
                             </a>

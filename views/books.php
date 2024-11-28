@@ -5,27 +5,13 @@ require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/controllers/BookController.php';
 include dirname(__DIR__) . '/includes/navbar.php';
 
-
-// Check if user is logged in
 if (!isset($_SESSION['user_type'])) {
     header("location: /lms_system/Auth/login.php");
     exit();
 }
 
-// Debugging: Check if user is admin
-// if (isset($_SESSION['user_type'])) {
-//     echo "<!-- User type: " . htmlspecialchars($_SESSION['user_type']) . " -->";
-// } else {
-//     echo "<!-- User type not set -->";
-// }
-
-// Create controller instance
 $bookController = new BookController($connect);
-
-// Get search term if exists
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-// Get books (either all or searched)
 $books = $bookController->searchBooks($searchTerm);
 ?>
 
@@ -46,6 +32,23 @@ $books = $bookController->searchBooks($searchTerm);
         .table-container {
             background-color: white;
             margin-top: 20px;
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+        }
+
+        .book-image-container {
+            text-align: center;
+        }
+
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        .btn-close {
+            z-index: 1;
         }
     </style>
 </head>
@@ -73,13 +76,6 @@ $books = $bookController->searchBooks($searchTerm);
             </div>
         </div>
 
-        <!-- Admin Controls -->
-        <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-            <div class="mb-3">
-                <a href="/books/create" class="btn btn-primary">Add New Book</a>
-            </div>
-        <?php endif; ?>
-
         <!-- Books Table -->
         <div class="table-container">
             <table class="table">
@@ -100,25 +96,51 @@ $books = $bookController->searchBooks($searchTerm);
                                 <td><?= htmlspecialchars($book['author']) ?></td>
                                 <td><?= htmlspecialchars($book['isbn']) ?></td>
                                 <td>
-                                    <span class=" align-center <?= $book['available_copies'] > 0 ? 'text-success' : 'text-danger' ?>">
-                                        <?= htmlspecialchars($book['available_copies']) ?>
-                                    </span>
+                                    <?php if ($book['available_copies'] > 0): ?>
+                                        <span class="text-success">Available</span>
+                                    <?php else: ?>
+                                        <span class="text-danger">Not Available</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-                                        <!-- Admin Actions -->
-                                        <a href="/books/edit/<?= $book['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                        <a href="/books/delete/<?= $book['id'] ?>"
-                                            class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
-                                    <?php else: ?>
-                                        <!-- Student Actions -->
-                                        <?php if ($book['available_copies'] > 0): ?>
-                                            <a href="/books/borrow/<?= $book['id'] ?>" class="btn btn-sm btn-primary">Borrow</a>
-                                        <?php else: ?>
-                                            <span class="text-danger">Not Available</span>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
+                                    <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#bookModal<?= $book['id'] ?>">
+                                        View Details
+                                    </button>
+
+                                    <!-- Book Details Modal -->
+                                    <div class="modal fade" id="bookModal<?= $book['id'] ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Borrow Book</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <strong>Title:</strong> <?= htmlspecialchars($book['title']) ?>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Author:</strong> <?= htmlspecialchars($book['author']) ?>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>ISBN:</strong> <?= htmlspecialchars($book['isbn']) ?>
+                                                    </div>
+                                                    <?php if ($book['available_copies'] > 0): ?>
+                                                        <a href="/books/borrow/<?= $book['id'] ?>"
+                                                            class="btn btn-primary"
+                                                            onclick="return confirm('Are you sure you want to borrow this book?')">
+                                                            Borrow Book
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-secondary" disabled>Currently Unavailable</button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -139,6 +161,9 @@ $books = $bookController->searchBooks($searchTerm);
     </div>
 
     <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

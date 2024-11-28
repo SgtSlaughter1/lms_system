@@ -35,14 +35,18 @@ $books = $bookController->searchBooks($searchTerm);
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Manage Books</h2>
-            <a href="/lms_system/views/addbook.php" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Add New Book
+
+            <a href="admin.php" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Back to Admin
             </a>
         </div>
-
+        <a href="/lms_system/views/admin/addbooks.php" class="btn btn-primary my-3">
+                    <i class="bi bi-plus-circle"></i> Add New Book
+                </a>
         <!-- Search Form -->
         <div class="row mb-4">
             <div class="col-md-6">
+                
                 <form action="" method="GET">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control"
@@ -58,6 +62,7 @@ $books = $bookController->searchBooks($searchTerm);
         </div>
 
         <!-- Books Table -->
+
         <div class="table-container">
             <table class="table table-hover">
                 <thead class="table-light">
