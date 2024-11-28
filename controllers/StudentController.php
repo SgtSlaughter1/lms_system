@@ -3,10 +3,9 @@ require_once dirname(__DIR__) . '/models/Student.php';
 
 class StudentController {
     private $studentModel;
-    private $db;
     
-    public function __construct($db) {
-        $this->studentModel = new Student($db);
+    public function __construct($connect) {
+        $this->studentModel = new Student($connect);
     }
     
     public function getStudentProfile($student_id) {

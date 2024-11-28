@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once dirname(__DIR__) . "/config/database.php";
-require_once dirname(__DIR__) . "/controllers/StudentController.php";
+require_once dirname(__DIR__) . '/../config/database.php';
+require_once dirname(__DIR__) . '/../controllers/StudentController.php';
+include dirname(__DIR__) . '/../includes/navbar.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['student_id'])) {
+// Check if user is student
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'student') {
     header("location: /lms_system/Auth/login.php");
     exit();
 }
-
 $studentController = new StudentController($connect);
 
 // Handle profile update
@@ -35,7 +35,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <?php include dirname(__DIR__) . '/includes/navbar.php'; ?>
+    
 
     <?php if (isset($_SESSION['success_message'])): ?>
         <!-- Success Modal -->
@@ -106,7 +106,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                             </div>
                             <div class="card-body">
                                 <div class="d-grid gap-2">
-                                    <a href="../views/books.php" class="btn btn-primary">
+                                    <a href="/lms_system/views/books.php" class="btn btn-primary">
                                         <i class="bi bi-search"></i> Search Books
                                     </a>
                                     <a href="#" class="btn btn-info">
@@ -173,7 +173,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
+    <?php include dirname(__DIR__) . '/../includes/footer.php'; ?>
 </body>
 
 </html>

@@ -53,19 +53,15 @@ class Book {
 
     // Database Operations
     public function getAllBooks() {
-        try {
-            $query = "SELECT * FROM books ORDER BY title";
-            $result = mysqli_query($this->conn, $query);
-
-            if (!$result) {
-                throw new Exception("Error fetching books: " . mysqli_error($this->conn));
-            }
-
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return [];
+        $sql = "SELECT * FROM books";
+        $result = $this->conn->query($sql);
+        
+        $books = array();
+        while ($row = $result->fetch_assoc()) {
+            $books[] = $row;
         }
+        
+        return $books;
     }
 
     public function getBookById($id) {
@@ -125,27 +121,21 @@ class Book {
     }
 
     public function searchBooks($searchTerm) {
-        try {
-            // Sanitize the search term
-            $searchTerm = mysqli_real_escape_string($this->conn, $searchTerm);
-            
-            // Search in title, author, and ISBN
-            $query = "SELECT * FROM books 
-                     WHERE title LIKE '%$searchTerm%' 
-                     OR author LIKE '%$searchTerm%' 
-                     OR isbn LIKE '%$searchTerm%' 
-                     ORDER BY title";
-                     
-            $result = mysqli_query($this->conn, $query);
-
-            if (!$result) {
-                throw new Exception("Error searching books: " . mysqli_error($this->conn));
-            }
-
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return [];
+        $searchPattern = "%{$searchTerm}%";
+        $sql = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sss", $searchPattern, $searchPattern, $searchPattern);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $books = array();
+        while ($row = $result->fetch_assoc()) {
+            $books[] = $row;
         }
+        
+        return $books;
     }
 }
+
+
+

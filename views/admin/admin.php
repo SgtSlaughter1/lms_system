@@ -1,6 +1,6 @@
 <?php
 session_start();
-include dirname(__DIR__) . "/config/database.php";
+include dirname(__DIR__) . "/../config/database.php";
 
 ?>
 
@@ -20,7 +20,7 @@ include dirname(__DIR__) . "/config/database.php";
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <?php include dirname(__DIR__) . "/includes/navbar.php"; ?>
+            <?php include dirname(__DIR__) . "/../includes/navbar.php"; ?>
 
             <!-- Main Content Area -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -139,7 +139,7 @@ include dirname(__DIR__) . "/config/database.php";
                                 <h6 class="m-0 font-weight-bold text-primary">Library Management</h6>
                             </div>
                             <div class="card-body">
-                                <a href="books.php" class="btn btn-primary mr-2">Manage Books</a>
+                                <a href="adminbooks.php" class="btn btn-primary mr-2">Manage Books</a>
                                 <a href="students.php" class="btn btn-success mr-2">Manage Students</a>
                                 <a href="transactions.php" class="btn btn-info mr-2">Book Transactions</a>
                                 <a href="reports.php" class="btn btn-warning">Generate Reports</a>
@@ -198,10 +198,8 @@ include dirname(__DIR__) . "/config/database.php";
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="/lms_system/assets/js/script.js"></script>
 </body>
 
 </html>
 
-<?php include dirname(__DIR__) . "/includes/footer.php"; ?>
+<?php include dirname(__DIR__) . '/../includes/footer.php'; ?>

@@ -1,15 +1,15 @@
 <?php
 
 class Student {
-    private $db;
+    private $connect;
     
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct($connect) {
+        $this->connect = $connect;
     }
     
     public function getStudentById($id) {
         $sql = "SELECT * FROM students WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -18,7 +18,7 @@ class Student {
     
     public function updateProfile($id, $data) {
         $sql = "UPDATE students SET name = ?, email = ?, phone = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("sssi", $data['name'], $data['email'], $data['phone'], $id);
         
         if($stmt->execute()) {
@@ -29,7 +29,7 @@ class Student {
     
     public function updatePassword($id, $password) {
         $sql = "UPDATE students SET password = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("si", $password, $id);
         
         if($stmt->execute()) {
