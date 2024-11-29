@@ -90,7 +90,7 @@ $books = $bookController->searchBooks($searchTerm);
                                         class="btn btn-sm btn-warning me-2">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
-                                    <a href="/lms_system/controllers/admin/deletebook.php?id=<?php echo $book['id']; ?>"
+                                    <a href="/lms_system/views/admin/deletebook.php?id=<?php echo $book['id']; ?>"
                                         class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this book?');">
                                         <i class="bi bi-trash"></i> Delete
                                     </a>
