@@ -31,4 +31,3 @@ if ($result['status']) {
 
 header("Location: borrowed_books.php");
 exit();
-?> 
