@@ -135,6 +135,11 @@ if (isset($_SESSION['role'])) {
                                 <i class="bi bi-book me-2"></i>Books
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" href="/lms_system/views/students/borrowed_books.php">
+                                <i class="bi bi-book-half me-2"></i>My Borrowed Books
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="/lms_system/Auth/logout.php">

@@ -54,4 +54,18 @@ class Student {
         }
         return ['status' => 'success'];
     }
+
+    public function getAllStudentsOrdered() {
+        $sql = "SELECT * FROM students ORDER BY name ASC";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $students = [];
+        while ($row = $result->fetch_assoc()) {
+            $students[] = $row;
+        }
+        
+        return $students;
+    }
 }

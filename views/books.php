@@ -129,13 +129,14 @@ $books = $bookController->searchBooks($searchTerm);
                                                         <strong>ISBN:</strong> <?= htmlspecialchars($book['isbn']) ?>
                                                     </div>
                                                     <?php if ($book['available_copies'] > 0): ?>
-                                                        <a href="/books/borrow/<?= $book['id'] ?>"
-                                                            class="btn btn-primary"
-                                                            onclick="return confirm('Are you sure you want to borrow this book?')">
-                                                            Borrow Book
-                                                        </a>
+                                                        <button type="button" class="btn btn-primary btn-sm" 
+                                                                onclick="showBorrowModal(<?php echo $book['id']; ?>, '<?php echo htmlspecialchars($book['title']); ?>')">
+                                                            <i class="bi bi-plus-circle"></i> Borrow
+                                                        </button>
                                                     <?php else: ?>
-                                                        <button class="btn btn-secondary" disabled>Currently Unavailable</button>
+                                                        <button class="btn btn-secondary btn-sm" disabled>
+                                                            <i class="bi bi-x-circle"></i> Not Available
+                                                        </button>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>
@@ -164,6 +165,83 @@ $books = $bookController->searchBooks($searchTerm);
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Borrow Modal -->
+    <div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrowModalLabel">Borrow Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="students/borrow_book.php" method="POST" id="borrowForm">
+                    <div class="modal-body">
+                        <input type="hidden" name="book_id" id="modalBookId">
+                        <p>You are borrowing: <strong id="modalBookTitle"></strong></p>
+                        
+                        <div class="mb-3">
+                            <label for="expected_return_date" class="form-label">Expected Return Date</label>
+                            <input type="date" class="form-control" id="expected_return_date" name="expected_return_date" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Borrow</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                        <p class="mt-3" id="successMessage"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function showBorrowModal(bookId, bookTitle) {
+        // Set the book details in the modal
+        document.getElementById('modalBookId').value = bookId;
+        document.getElementById('modalBookTitle').textContent = bookTitle;
+        
+        // Set date constraints
+        const today = new Date();
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + 30);
+        
+        const returnDateInput = document.getElementById('expected_return_date');
+        returnDateInput.min = today.toISOString().split('T')[0];
+        returnDateInput.max = maxDate.toISOString().split('T')[0];
+        
+        // Show the modal
+        new bootstrap.Modal(document.getElementById('borrowModal')).show();
+    }
+
+    // Show success modal if there's a success message
+    <?php if (isset($_SESSION['success'])): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('successMessage').textContent = <?php echo json_encode($_SESSION['success']); ?>;
+            new bootstrap.Modal(document.getElementById('successModal')).show();
+        });
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+    </script>
 </body>
 
 </html>

@@ -109,9 +109,10 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                                     <a href="/lms_system/views/books.php" class="btn btn-primary">
                                         <i class="bi bi-search"></i> Search Books
                                     </a>
-                                    <a href="#" class="btn btn-info">
+                                    <a href="my_transactions.php" class="btn btn-info">
                                         <i class="bi bi-clock-history"></i> View History
                                     </a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -135,17 +136,76 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                                     <tr>
                                         <th><i class="bi bi-book"></i> Book Title</th>
                                         <th><i class="bi bi-calendar-check"></i> Borrowed Date</th>
-                                        <th><i class="bi bi-calendar-due"></i> Due Date</th>
+                                        <th><i class="bi bi-calendar-due"></i> Return Date</th>
                                         <th><i class="bi bi-info-circle"></i> Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td colspan="4" class="text-center">
-                                            <i class="bi bi-inbox text-muted" style="font-size: 1.5rem;"></i><br>
-                                            No books currently borrowed
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    require_once dirname(__DIR__) . "/../controllers/TransactionController.php";
+                                    $transactionController = new TransactionController($connect);
+                                    $borrowedBooks = $transactionController->getStudentTransactions($_SESSION['student_id']);
+
+                                    if (!empty($borrowedBooks)): 
+                                        // Show only the 3 most recent transactions
+                                        $recentBooks = array_slice($borrowedBooks, 0, 3);
+                                        foreach ($recentBooks as $book): 
+                                    ?>
+                                        <tr>
+                                            <td>
+                                                <?php 
+                                                $title = isset($book['title']) ? htmlspecialchars($book['title']) : 'Unknown Title';
+                                                $author = isset($book['author']) ? htmlspecialchars($book['author']) : 'Unknown Author';
+                                                ?>
+                                                <?php echo $title; ?>
+                                                <small class="text-muted d-block">
+                                                    by <?php echo $author; ?>
+                                                </small>
+                                            </td>
+                                            <td><?php echo date('M d, Y', strtotime($book['borrow_date'])); ?></td>
+                                            <td>
+                                                <?php 
+                                                if ($book['status'] === 'returned') {
+                                                    $displayDate = isset($book['display_return_date']) ? 
+                                                        date('M d, Y', strtotime($book['display_return_date'])) : 
+                                                        'Date not available';
+                                                    echo $displayDate;
+                                                } else {
+                                                    $returnDate = new DateTime($book['expected_return_date']);
+                                                    $today = new DateTime();
+                                                    $isOverdue = $returnDate < $today;
+                                                    ?>
+                                                    <span class="<?php echo $isOverdue ? 'text-danger' : 'text-success'; ?>">
+                                                        <?php echo $returnDate->format('M d, Y'); ?>
+                                                        <?php if ($isOverdue): ?>
+                                                            <span class="badge bg-danger">Overdue</span>
+                                                        <?php endif; ?>
+                                                    </span>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php if ($book['status'] === 'returned'): ?>
+                                                    <span class="badge bg-success">Returned</span>
+                                                <?php elseif (isset($isOverdue) && $isOverdue): ?>
+                                                    <span class="badge bg-danger">Overdue</span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-warning">Borrowed</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php 
+                                        endforeach;
+                                    else: 
+                                    ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center">
+                                                <i class="bi bi-inbox text-muted" style="font-size: 1.5rem;"></i><br>
+                                                No books currently borrowed
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
