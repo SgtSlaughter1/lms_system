@@ -14,11 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $isbn = trim($_POST['isbn']);
+    $image_url = trim($_POST['image_url']);
     $copies = (int)$_POST['copies'];
     
-    $query = "INSERT INTO books (title, author, isbn, available_copies) VALUES (?, ?, ?, ?)";
+    $query = "INSERT INTO books (title, author, isbn, available_copies, image_url) VALUES (?, ?, ?, ?, ?)";
     $stmt = $connect->prepare($query);
-    $stmt->bind_param("sssi", $title, $author, $isbn, $copies);
+    $stmt->bind_param("sssis", $title, $author, $isbn, $copies, $image_url);
     
     if ($stmt->execute()) {
         $success = "Book added successfully!";
@@ -84,6 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="copies" class="form-label">Number of Copies</label>
                         <input type="number" class="form-control" id="copies" name="copies" 
                                min="1" value="1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image_url" class="form-label">Image URL</label>
+                        <input type="text" class="form-control" id="image_url" name="image_url" required>
                     </div>
 
                     <div class="d-grid">

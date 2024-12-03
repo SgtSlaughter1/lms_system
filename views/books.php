@@ -119,6 +119,9 @@ $books = $bookController->searchBooks($searchTerm);
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
+                                                <div class="mb-3">
+                                                <img src="<?= htmlspecialchars($book['image_url']) ?>" alt="" class="img-fluid" style="max-height: 200px;"> 
+                                                    </div>
                                                     <div class="mb-3">
                                                         <strong>Title:</strong> <?= htmlspecialchars($book['title']) ?>
                                                     </div>

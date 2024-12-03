@@ -44,9 +44,9 @@ if (isset($_SESSION['role'])) {
         <!-- Brand -->
         <?php if (isset($_SESSION['role'])): ?>
             <?php if ($_SESSION['role'] === 'admin'): ?>
-                <a class="navbar-brand" href="/lms_system/views/admin/admin.php">Library Management System</a>
+                <a class="navbar-brand" href="/lms_system/views/admin/admin.php"><i class="bi bi-book me-2"></i>Library Management System</a>
             <?php elseif ($_SESSION['role'] === 'student'): ?>
-                <a class="navbar-brand" href="/lms_system/views/students/students.php">Library Management System</a>
+                <a class="navbar-brand" href="/lms_system/views/students/students.php"><i class="bi bi-book me-2"></i>Library Management System</a>
             <?php endif; ?>
         <?php else: ?>
             <a class="navbar-brand" href="/lms_system/index.php">Library Management System</a>

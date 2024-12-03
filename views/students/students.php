@@ -3,6 +3,7 @@ session_start();
 require_once dirname(__DIR__) . '/../config/database.php';
 require_once dirname(__DIR__) . '/../controllers/StudentController.php';
 include dirname(__DIR__) . '/../includes/navbar.php';
+require_once dirname(__DIR__) . '/../controllers/TransactionController.php'; 
 
 // Check if user is logged in as student
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
@@ -18,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
+
+// Get the count of borrowed books for the logged-in student
+$transactionController = new TransactionController($connect);
+$borrowedBooksCount = $transactionController->countBorrowedBooks($_SESSION['student_id']);
+
 
 // Get student information
 $student = $studentController->getStudentProfile($_SESSION['student_id']);
@@ -81,7 +87,7 @@ $student = $studentController->getStudentProfile($_SESSION['student_id']);
                                     <i class="bi bi-book text-primary"></i>
                                     Books Borrowed
                                 </h5>
-                                <p class="card-text display-6">0</p>
+                                <p class="card-text ">You have borrowed <strong><?php echo $borrowedBooksCount; ?></strong> book(s).</p>
                             </div>
                         </div>
                     </div>

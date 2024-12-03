@@ -50,4 +50,8 @@ class TransactionController {
     public function getBorrowedBooks($studentId) {
         return $this->transactionModel->getStudentBorrowedBooks($studentId);
     }
+
+    public function countBorrowedBooks($studentId) {
+        return count($this->transactionModel->getStudentTransactions($studentId));
+    }
 } 
