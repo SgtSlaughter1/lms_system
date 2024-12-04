@@ -7,19 +7,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-include dirname(__DIR__) . "/../config/database.php";
+require_once dirname(__DIR__) . "/../config/database.php";
+require_once dirname(__DIR__) . "/../controllers/StudentController.php";
 
-// Fetch all students from the database
-$query = "SELECT * FROM students ORDER BY name ASC";
-$result = mysqli_query($connect, $query);
+// Initialize controller and get students
+$studentController = new StudentController($connect);
+$students = $studentController->getAllStudents();
 
-// Store the rows in an array
-$students = [];
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $students[] = $row;
-    }
-}
 ?>
 
 <!DOCTYPE html>

@@ -46,20 +46,23 @@ $books = $bookController->searchBooks($searchTerm);
                 </a>
         <!-- Search Form -->
         <div class="row mb-4">
-            <div class="col-md-6">
-                
-                <form action="" method="GET">
-                    <div class="input-group">
+            <div class="col-md-6"> 
+                <form action="" method="GET" >
+                    <div class="input-group" style="border:1px solid red;">
                         <input type="text" name="search" class="form-control"
                             placeholder="Search books..."
                             value="<?php echo htmlspecialchars($searchTerm); ?>">
                         <button type="submit" class="btn btn-primary">Search</button>
+                        
                         <?php if (!empty($searchTerm)): ?>
                             <a href="adminbooks.php" class="btn btn-secondary">Clear</a>
                         <?php endif; ?>
                     </div>
+
                 </form>
+                
             </div>
+            
         </div>
 
         <!-- Books Table -->

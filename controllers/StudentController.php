@@ -64,4 +64,13 @@ class StudentController {
         }
         return $this->studentModel->updatePassword($student_id, $password);
     }
+
+    public function getAllStudents() {
+        try {
+            return $this->studentModel->getAllStudentsOrdered();
+        } catch (Exception $e) {
+            error_log("Error fetching students: " . $e->getMessage());
+            return [];
+        }
+    }
 }

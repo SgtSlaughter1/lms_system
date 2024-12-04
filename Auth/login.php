@@ -6,9 +6,10 @@ session_start();
 if (isset($_POST['log'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $error_message = '';
 
     // Check in students table first
-    $sql = "SELECT * FROM students WHERE username = ?";
+    $sql = "SELECT * FROM students WHERE UserName = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -26,34 +27,39 @@ if (isset($_POST['log'])) {
                 'name' => $row['name'],
                 'email' => $row['email']
             );
-
             
             // Redirect to student dashboard
             header("location: /lms_system/views/students/students.php");
             exit();
+        } else {
+            $error_message = "Invalid credentials/password";
         }
-    }
-
-    // Check in admins table if not found in students
-    $sql = "SELECT * FROM admins WHERE username = ?";
-    $stmt = $connect->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // Check password
-        if ($password === $row['password']) {
-            // Set admin session variables
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['role'] = 'admin';
-            $_SESSION['admin_name'] = $row['name'];
-            $_SESSION['admin_email'] = $row['email'];
-            
-            // Correct path to admin dashboard
-            header("location: /lms_system/views/admin/admin.php");
-            exit();
+    } else {
+        // Check in admins table if not found in students
+        $sql = "SELECT * FROM admins WHERE username = ?";
+        $stmt = $connect->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            // Check password
+            if ($password === $row['password']) {
+                // Set admin session variables
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['role'] = 'admin';
+                $_SESSION['admin_name'] = $row['name'];
+                $_SESSION['admin_email'] = $row['email'];
+                
+                // Redirect to admin dashboard
+                header("location: /lms_system/views/admin/admin.php");
+                exit();
+            } else {
+                $error_message = "Invalid credentials/password";
+            }
+        } else {
+            $error_message = "Invalid credentials";
         }
     }
 }

@@ -1,202 +1,110 @@
-# MVC Implementation Details
+# Library Management System (LMS)
 
-## MVC Structure
-MVC Flow:
-├── Model (Student.php)
-│ └── Database Operations
-├── View (profile.php)
-│ └── Display Logic
-└── Controller (StudentController.php)
-└── Business Logic
+## Overview
+A comprehensive PHP-based Library Management System that enables students to borrow books, track their borrowing history, and manage returns. The system implements core OOP principles and follows modern PHP practices.
 
+## Features
 
-## 1. Model (Student.php)
+### Student Features
+- Browse and search available books
+- Borrow books with return date selection
+- View currently borrowed books
+- Track borrowing history
+- Return books
+- Overdue notifications
+- Maximum 3 books borrowing limit
 
-php
-class Student {
-private $db;
-public function construct($db) {
-$this->db = $db;
-}
-public function getStudentById($id) {
-$sql = "SELECT FROM students WHERE id = ?";
-$stmt = $this->db->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-return $result->fetch_assoc();
-}
-}
+### Admin Features
+- Manage books (CRUD operations)
+- Track all transactions
+- Monitor overdue books
+- Student management
+- Book inventory management
 
-**Purpose:**
-- Handles all database interactions
-- Contains data-related logic
-- Manages student records
-- Returns formatted data
+## Technical Architecture
 
-**Responsibilities:**
-1. Database queries
-2. Data validation
-3. Data formatting
-4. Error handling
+### Core Components
 
-## 2. View (profile.php)
+1. **Authentication System**
+   - Student and Admin roles
+   - Session-based authentication
+   - Secure login/logout functionality
 
-php
-// Session and security
-session_start();
-require_once dirname(DIR) . "/config/database.php";
-require_once dirname(DIR) . "/controllers/StudentController.php";
-// Authentication
-if (!isset($SESSION['student_id'])) {
-header("location: /lms_system/Auth/login.php");
-exit();
-}
-// Get data through controller
-$studentController = new StudentController($connect);
-$student = $studentController->getStudentProfile($SESSION['student_id']);
-// Display HTML
-<div class="container py-5">
-<div class="row">
-<!-- Display student data -->
-<h4><?php echo htmlspecialchars($student['name']); ?></h4>
-<!-- More display logic -->
-</div>
-</div>
+2. **Transaction Management**
+   - Borrowing validation
+   - Return processing
+   - History tracking
+   - Overdue calculation
 
-**Purpose:**
-- Displays data to user
-- Handles presentation logic
-- Manages user interface
-- Formats data presentation
-
-**Responsibilities:**
-1. Data presentation
-2. User interface
-3. Display formatting
-4. Basic input validation
-
-## 3. Controller (StudentController.php)
-
-php
-class StudentController {
-private $studentModel;
-private $db;
-public function construct($db) {
-$this->db = $db;
-$this->studentModel = new Student($db);
-}
-public function getStudentProfile($student_id) {
-return $this->studentModel->getStudentById($student_id);
-}
-}
-
-**Purpose:**
-- Connects Model and View
-- Handles business logic
-- Manages data flow
-- Controls application flow
-
-**Responsibilities:**
-1. Request handling
-2. Data processing
-3. Model interaction
-4. View selection
-
-## How They Connect
-
-### 1. Database to Model Connection
-
-php
-// In config/database.php
-$connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-// In Student.php (Model)
-class Student {
-private $db;
-public function construct($db) {
-$this->db = $db; // Database connection passed to model
-}
-}
-
-### 2. Model to Controller Connection
-
-php
-// In StudentController.php
-class StudentController {
-public function construct($db) {
-$this->studentModel = new Student($db); // Model instantiated in controller
-}
-}
+3. **Database Structure**
 
 
-### 3. Controller to View Connection
-php
-// In profile.php (View)
-$studentController = new StudentController($connect);
-$student = $studentController->getStudentProfile($SESSION['student_id']);
 
+## Key Implementations
 
-## Data Flow Process
-Complete Flow:
-1. User Request
-└── View receives request
-View to Controller
-└── Controller instantiated
-└── Method called
-Controller to Model
-└── Data requested
-└── Query prepared
-Model to Database
-└── Query executed
-└── Data retrieved
-Data Return Path
-└── Model formats data
-└── Controller processes
-└── View displays
+### 1. Borrowing System
+- Validates student eligibility
+- Checks book availability
+- Implements 30-day return policy
+- Tracks overdue status
 
+### 2. Return System
+- Updates book availability
+- Records return timestamp
+- Calculates overdue status
+- Updates transaction status
 
-## MVC Interaction Example
+### 3. Transaction History
+- Complete borrowing records
+- Status tracking
+- Date management
+- Student-specific history
 
-php
-// 1. User accesses profile page
-// profile.php (View)
-$studentController = new StudentController($connect);
-// 2. Controller processes request
-// StudentController.php
-public function getStudentProfile($student_id) {
-return $this->studentModel->getStudentById($student_id);
-}
-// 3. Model retrieves data
-// Student.php
-public function getStudentById($id) {
-$sql = "SELECT FROM students WHERE id = ?";
-$stmt = $this->db->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-return $stmt->get_result()->fetch_assoc();
-}
-// 4. View displays data
-// profile.php
-<h4><?php echo htmlspecialchars($student['name']); ?></h4>
+## Security Features
 
+1. **Input Validation**
+   - Form data sanitization
+   - SQL injection prevention
+   - XSS protection
 
-## Benefits of This MVC Implementation
-1. **Separation of Concerns**
-   - Each component has specific responsibilities
-   - Code is organized and maintainable
-   - Easy to modify individual parts
+2. **Authentication**
+   - Role-based access control
+   - Session management
+   - Secure password handling
 
-2. **Security**
-   - Centralized data validation
-   - Prepared statements in Model
-   - Sanitized output in View
+## Installation
 
-3. **Maintainability**
-   - Modular code structure
-   - Easy to extend functionality
-   - Clear data flow
+1. Clone the repository
+2. Import the database schema
+3. Configure database connection in `config/database.php`
+4. Set up your web server (Apache/Nginx)
+5. Access the system through the browser
 
-4. **Scalability**
-   - Easy to add new features
-   - Simple to modify existing functionality
-   - Clear structure for growth
+## Usage
+
+### Student Access
+1. Login with student credentials
+2. Browse available books
+3. Borrow books (max 3)
+4. View borrowing history
+5. Return books
+
+### Admin Access
+1. Login with admin credentials
+2. Manage books inventory
+3. View all transactions
+4. Monitor overdue books
+5. Manage student accounts
+
+## Dependencies
+- PHP 7.4+
+- MySQL 5.7+
+- Bootstrap 5.3.0
+- Bootstrap Icons 1.7.2
+
+## Future Enhancements
+1. Email notifications for overdue books
+2. Fine calculation system
+3. Book reservation system
+4. PDF generation for receipts
+5. Advanced search filters

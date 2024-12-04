@@ -141,7 +141,6 @@ include dirname(__DIR__) . "/../config/database.php";
                                 <a href="adminbooks.php" class="btn btn-primary mr-2">Manage Books</a>
                                 <a href="view_students.php" class="btn btn-success mr-2">Manage Students</a>
                                 <a href="transactions.php" class="btn btn-info mr-2">Book Transactions</a>
-                                <a href="reports.php" class="btn btn-warning">Generate Reports</a>
                             </div>
                         </div>
                     </div>
