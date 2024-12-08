@@ -42,13 +42,7 @@ $borrowedBooks = $transactionController->getBorrowedBooks($_SESSION['student_id'
             <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
 
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php echo htmlspecialchars($_SESSION['error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
+        
 
         <div class="card">
             <div class="card-body">

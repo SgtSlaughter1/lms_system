@@ -5,10 +5,6 @@ require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/controllers/BookController.php';
 include dirname(__DIR__) . '/includes/navbar.php';
 
-// if (!isset($_SESSION['user_type'])) {
-//     header("location: /lms_system/Auth/login.php");
-//     exit();
-// }
 
 $bookController = new BookController($connect);
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -23,9 +19,7 @@ $books = $bookController->searchBooks($searchTerm);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Books</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <style>
@@ -76,6 +70,13 @@ $books = $bookController->searchBooks($searchTerm);
             </div>
         </div>
 
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo htmlspecialchars($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
         <!-- Books Table -->
         <div class="table-container">
             <table class="table">
@@ -110,6 +111,7 @@ $books = $bookController->searchBooks($searchTerm);
                                         View Details
                                     </button>
 
+                                  
                                     <!-- Book Details Modal -->
                                     <div class="modal fade" id="bookModal<?= $book['id'] ?>" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
@@ -141,6 +143,8 @@ $books = $bookController->searchBooks($searchTerm);
                                                             <i class="bi bi-x-circle"></i> Not Available
                                                         </button>
                                                     <?php endif; ?>
+
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -166,7 +170,7 @@ $books = $bookController->searchBooks($searchTerm);
 
     <?php include dirname(__DIR__) . '/includes/footer.php'; ?>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Borrow Modal -->
